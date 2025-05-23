@@ -29,7 +29,8 @@ const CompanyCreate = () => {
 
             const res = await axios.post(`${COMPANY_API_END_POINT}/register`, formData, {
                 headers: {
-                    'Content-Type': 'multipart/form-data'
+                    'Content-Type': 'multipart/form-data',
+                    'Authorization': `Bearer ${token}` 
                 },
                 withCredentials: true
             });
