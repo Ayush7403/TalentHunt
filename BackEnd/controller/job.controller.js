@@ -8,8 +8,9 @@ export const postJob = async (req, res) => {
             return res.status(400).json({
                 message: "Something is missing",
                 success: false
-            })
-        };
+            });
+        }
+
         const job = await Job.create({
             title,
             description,
@@ -22,13 +23,18 @@ export const postJob = async (req, res) => {
             company: companyId,
             created_by: userId
         });
-        res.status(201).json({
+
+        return res.status(201).json({
             message: "Job Posted successfully",
             job,
             success: true
-        })
+        });
     } catch (error) {
-        console.log(error);
+        console.error(error);
+        return res.status(500).json({
+            message: "Internal server error",
+            success: false
+        });
     }
 }
 
