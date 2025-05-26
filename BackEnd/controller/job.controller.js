@@ -8,8 +8,8 @@ export const postJob = async (req, res) => {
             return res.status(400).json({
                 message: "Something is missing",
                 success: false
-            });
-        }
+            })
+        };
 
         const job = await Job.create({
             title,
@@ -31,9 +31,6 @@ export const postJob = async (req, res) => {
         });
     } catch (error) {
         console.error(error);
-        return res.status(500).json({
-            message: "Internal server error",
-            success: false
         });
     }
 }
