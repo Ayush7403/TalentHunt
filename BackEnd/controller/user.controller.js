@@ -13,9 +13,13 @@ export const register = async (req, res) => {
                 message: "Something is missing",
                 success: false
             });
-        }
+        };
 
         // Check if user already exists
+        const file = req.file;
+        const fileUri = getDataUri(file);
+        const cloudResponse = await cloudinary.uploader.upload(fileUri.content);
+
         const user = await User.findOne({ email });
         if (user) {
             return res.status(400).json({
@@ -41,7 +45,7 @@ export const register = async (req, res) => {
             password: hashedPassword,
             role,
             profile: {
-                profilePhoto: profilePhotoUrl
+                profilePhoto: cloudResponse.secure_url
             }
         });
 
@@ -141,7 +145,7 @@ export const updateProfile = async (req, res) => {
       return res.status(400).json({
         message: "User not found.",
         success: false,
-      });
+      })
     }
 
     if (fullname) user.fullname = fullname;
@@ -164,14 +168,14 @@ export const updateProfile = async (req, res) => {
       phoneNumber: user.phoneNumber,
       role: user.role,
       profile: user.profile,
-    };
+    }
 
     return res.status(200).json({
       message: "Profile updated successfully.",
       user,
       success: true,
-    });
+    })
   } catch (error) {
     console.log(error);
   }
-};
+}
