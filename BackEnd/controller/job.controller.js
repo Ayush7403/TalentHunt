@@ -1,15 +1,30 @@
 import { Job } from "../models/job.model.js";
+
 export const postJob = async (req, res) => {
     try {
-        const { title, description, requirements, salary, location, jobType, experience, position, companyId } = req.body;
+        const {
+            title,
+            description,
+            requirements,
+            salary,
+            location,
+            jobType,
+            experience,
+            position,
+            companyId
+        } = req.body;
+
         const userId = req.id;
 
-        if (!title || !description || !requirements || !salary || !location || !jobType || !experience || !position || !companyId) {
+        if (
+            !title || !description || !requirements || !salary ||
+            !location || !jobType || !experience || !position || !companyId
+        ) {
             return res.status(400).json({
                 message: "Something is missing",
                 success: false
-            })
-        };
+            });
+        }
 
         const job = await Job.create({
             title,
@@ -29,11 +44,16 @@ export const postJob = async (req, res) => {
             job,
             success: true
         });
+
     } catch (error) {
         console.error(error);
+        return res.status(500).json({
+            message: "Internal server error",
+            success: false
         });
     }
-}
+};
+
 
 
 export const getAllJobs = async (req, res) => {
