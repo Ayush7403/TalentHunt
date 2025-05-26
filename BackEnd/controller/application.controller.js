@@ -1,6 +1,5 @@
 import { Application } from "../models/application.model.js";
 import { Job } from "../models/job.model.js";
-import { User } from "../models/user.model.js";
 
 export const applyJob = async (req, res)=>{
     try {
@@ -15,7 +14,7 @@ export const applyJob = async (req, res)=>{
         const existingApplication = await Application.findOne({job:jobId, applicant: userId});
         if(existingApplication){
             return res.status(400).json({
-                message:"you have already applie for this job",
+                message:"you have already applied for this job",
                 success: false
             })
         };
