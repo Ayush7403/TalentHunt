@@ -5,55 +5,33 @@ import cloudinary from "../utils/cloudinary.js";
 export const registerCompany = async (req, res) => {
     try {
         const { companyName } = req.body;
-
         if (!companyName) {
             return res.status(400).json({
                 message: "Company name is required.",
                 success: false
             });
         }
-
-        const normalizedName = companyName.trim().toLowerCase();
-        const existingCompany = await Company.findOne({
-            name: new RegExp(`^${normalizedName}$`, 'i')
-        });
-
-        if (existingCompany) {
+        let company = await Company.findOne({ name: companyName });
+        if (company) {
             return res.status(400).json({
-                message: "You can't register the same company twice.",
+                message: "You can't register same company.",
                 success: false
-            });
-        }
-
-        let logo = "";
-        if (req.file) {
-            const fileUri = getDataUri(req.file);
-            const cloudResponse = await cloudinary.uploader.upload(fileUri.content);
-            logo = cloudResponse.secure_url;
-        }
-
-        const newCompany = await Company.create({
-            name: normalizedName,
-            userId: req.id,
-            logo
+            })
+        };
+        company = await Company.create({
+            name: companyName,
+            userId: req.id
         });
 
         return res.status(201).json({
             message: "Company registered successfully.",
-            company: newCompany,
+            company,
             success: true
-        });
-
+        })
     } catch (error) {
-        console.error(error);
-        res.status(500).json({
-            message: "Server error while registering company.",
-            success: false
-        });
+        console.log(error);
     }
-};
-
-
+}
 export const getCompany = async (req, res) => {
     try {
         const userId = req.id; // logged in user id
