@@ -1,6 +1,7 @@
 import { Application } from "../models/application.model.js";
 import { Job } from "../models/job.model.js";
 
+HEAD
 export const applyJob = async (req, res) => {
   try {
     const userId = req.id;
@@ -9,6 +10,44 @@ export const applyJob = async (req, res) => {
       return res
         .status(400)
         .json({ message: "Invalid job id", success: false });
+export const applyJob = async (req, res)=>{
+    try {
+        const userId = req.id;
+        const jobId = req.params.id;
+        if(!jobId){
+            return res.status(400).json({
+                message: "Job id is required",
+                success: false
+            })
+        };
+        const existingApplication = await Application.findOne({job:jobId, applicant: userId});
+        if(existingApplication){
+            return res.status(400).json({
+                message:"you have already applied for this job",
+                success: false
+            })
+        };
+        //check if the job exist
+        const job = await Job.findById(jobId);
+        if(!job){
+            return res.status(404).json({
+                message:"Job not Found",
+                success: false
+            })
+        }
+        const newApplication = await Application.create({
+            job: jobId,
+            applicant: userId
+        });
+        job.applications.push(newApplication._id);
+        await job.save();
+        return res.status(201).json({
+            message: "job applied successfully",
+            success: true
+        })
+        } catch (error) {
+        console.log(error);
+9418e48bce02124d69e3dbb949280e0b475f4565
     }
     // check if the user already has applied for this job
     const existingApplication = await Application.findOne({
@@ -59,6 +98,7 @@ export const getAppliedJobs = async (req, res) => {
         .status(404)
         .json({ message: "No applications found", success: false });
     }
+ HEAD
 
     return res.status(200).json({ application, success: true });
   } catch (error) {
@@ -118,3 +158,6 @@ export const updateStatus = async (req, res) => {
     res.status(500).json({ message: "Server error", success: false });
   }
 };
+
+}
+9418e48bce02124d69e3dbb949280e0b475f4565
