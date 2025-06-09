@@ -1,0 +1,10 @@
+{
+  "compilerOptions": {
+    "baseUrl": "src", // optional, if you're using absolute imports
+    "paths": {
+      "@/*": ["*"]
+    },
+    "jsx": "react-jsx"
+  },
+  "include": ["src"]
+}
