@@ -14,6 +14,24 @@ export const register = async (req, res) => {
                 success: false
             });
         };
+
+        const isValidEmail = /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email);
+        const isValidPassword = password.length >= 6;
+
+        if (!isValidEmail) {
+            return res.status(400).json({
+                message: "Invalid email format.",
+                success: false,
+            });
+        }
+
+        if (!isValidPassword) {
+            return res.status(400).json({
+                message: "Password must be at least 6 characters.",
+                success: false,
+            });
+        }
+
         const file = req.file;
         const fileUri = getDataUri(file);
         const cloudResponse = await cloudinary.uploader.upload(fileUri.content);
@@ -65,6 +83,14 @@ export const login = async (req, res) => {
             });
         }
 
+        const isValidEmail = /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email);
+        if (!isValidEmail) {
+            return res.status(400).json({
+                message: "Invalid email format.",
+                success: false,
+            });
+        }
+
         const isPasswordMatch = await bcrypt.compare(password, user.password);
         if (!isPasswordMatch) {
             return res.status(400).json({
@@ -84,10 +110,11 @@ export const login = async (req, res) => {
         const token = jwt.sign(tokenData, process.env.SECRET_KEY, { expiresIn: '1d' });
         res.cookie("accessToken", token, {
             httpOnly: true,
-            secure: false, // set to true in production with HTTPS
-            sameSite: "Lax", // or "None" if using HTTPS + cross-origin
+            secure: process.env.NODE_ENV === "production",
+            sameSite: process.env.NODE_ENV === "production" ? "None" : "Lax", // None is required for cross-origin cookies
             maxAge: 24 * 60 * 60 * 1000
         });
+
 
         user = {
             _id: user._id,
