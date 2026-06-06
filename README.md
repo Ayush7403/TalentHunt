@@ -1,7 +1,7 @@
 # TalentHunt - Job Portal Web App
 
 <p align="center">
-  <img src="./public/logo.png" alt="TalentHunt Logo" width="200"/>
+  <img src="./Frontend/public/logo.png" alt="TalentHunt Logo" width="200"/>
 </p>
 
 TalentHunt is a full-stack job portal web application where users can search and apply for jobs, while companies can post job openings and manage applications.
@@ -10,7 +10,7 @@ TalentHunt is a full-stack job portal web application where users can search and
 
 ## 🔗 Live Demo
 
-[Visit Deployed App](https://talenthunt-opi2.onrender.com)
+[Visit Deployed App](https://talenthunt-opi2.onrender.com/)
 
 ---
 
